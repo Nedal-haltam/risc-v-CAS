@@ -14,5 +14,8 @@
     <Reference Include="LibUtils">
       <HintPath>..\risc-v-utils\LibUtil\bin\Debug\net8.0\LibUtils.dll</HintPath>
     </Reference>
+    <Reference Include="Shartilities">
+      <HintPath>..\Shartilities\bin\Debug\net8.0\Shartilities.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
