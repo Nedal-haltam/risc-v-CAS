@@ -10,8 +10,8 @@ namespace main {
             Console.WriteLine($"  -mc <file>            Path to input machine code file (required)");
             Console.WriteLine($"  -dm <file>            Path to input data memory file (optional)");
             Console.WriteLine($"  -o <file>             Path to output file for register and data memory states (default: ./a.txt)");
-            Console.WriteLine($"  --im-size <size>      Instruction memory size in bytes (default: 1024)");
-            Console.WriteLine($"  --dm-size <size>      Data memory size in bytes (default: 1024)");
+            Console.WriteLine($"  --im-size <size>      Instruction memory total size in bytes (default: 1024)");
+            Console.WriteLine($"  --dm-size <size>      Data memory total size in bytes (default: 1024)");
             Console.WriteLine();
             Console.WriteLine($"Example:");
             Console.WriteLine($"  {Environment.ProcessPath} --cpu-type singlecycle -mc program.mc -dm data.dm -o output.txt --im-size 2048 --dm-size 2048");
@@ -103,12 +103,9 @@ namespace main {
 
             if (cpu_type.Value == LibCPU.CPU_type.SingleCycle) {
                 StringBuilder sb = new StringBuilder();
-                LibCPU.RISCV.IM_SIZE = IM_SIZE.Value;
-                LibCPU.RISCV.DM_SIZE = DM_SIZE.Value;
-                LibCPU.SingleCycle cpu = new(mcs, data_mem_init);
-                (int cycles, LibCPU.RISCV.Exceptions excep) = cpu.Run();
-                sb.Append(LibCPU.RISCV.get_regs(cpu.regs));
-                sb.Append(LibCPU.RISCV.get_DM(cpu.DM));
+                (int cycles, List<int> regs, List<string> DM) = LibCPU.SingleCycle.Run(mcs, data_mem_init, IM_SIZE.Value, DM_SIZE.Value);
+                sb.Append(LibCPU.RISCV.get_regs(regs));
+                sb.Append(LibCPU.RISCV.get_DM(DM));
                 sb.Append($"Number of cycles consumed : {cycles,10}\n");
                 File.WriteAllText(output_filepath, sb.ToString());
             }
@@ -116,26 +113,6 @@ namespace main {
             {
                 Shartilities.Log(Shartilities.LogType.ERROR, $"simulating on {cpu_type.ToString()} is unsupported for now\n", 1);
             }
-            //else if (cpu_type == LibCPU.CPU_type.PipeLined) {
-            //    LibCPU.RISCV.IM_SIZE = IM_SIZE;
-            //    LibCPU.RISCV.DM_SIZE = DM_SIZE;
-            //    LibCPU.CPU6STAGE cpu = new(mcs, data_mem_init);
-            //    (int cycles, LibCPU.RISCV.Exceptions excep) = cpu.Run();
-            //    sb.Append(LibCPU.RISCV.get_regs(cpu.regs));
-            //    sb.Append(LibCPU.RISCV.get_DM(cpu.DM));
-            //    //sb.Append($"Exception Type : {excep.ToString()}");
-            //    sb.Append($"Number of cycles consumed : {cycles,10}\n");
-            //}
-            //else if (cpu_type == LibCPU.CPU_type.OOO) {
-            //    LibCPU.RISCV.IM_SIZE = IM_SIZE;
-            //    LibCPU.RISCV.DM_SIZE = DM_SIZE;
-            //    LibCPU.OOO cpu = new(mcs, data_mem_init);
-            //    (int cycles, LibCPU.RISCV.Exceptions excep) = cpu.Run();
-            //    sb.Append(LibCPU.RISCV.get_regs(cpu.regs));
-            //    sb.Append(LibCPU.RISCV.get_DM(cpu.DM));
-            //    //sb.Append($"Exception Type : {excep.ToString()}");
-            //    sb.Append($"Number of cycles consumed : {cycles,10}\n");
-            //}
         }
     }
 }
