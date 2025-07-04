@@ -1,5 +1,6 @@
 using System.Text;
-namespace main {
+namespace CAS
+{
     internal class Program {
         static void Usage()
         {
@@ -102,7 +103,7 @@ namespace main {
                 data_mem_init = [.. File.ReadAllLines(dm_filepath)];
 
             if (cpu_type.Value == LibCPU.CPU_type.SingleCycle) {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 (int cycles, List<int> regs, List<string> DM) = LibCPU.SingleCycle.Run(mcs, data_mem_init, IM_SIZE.Value, DM_SIZE.Value);
                 sb.Append(LibCPU.RISCV.get_regs(regs));
                 sb.Append(LibCPU.RISCV.get_DM(DM));
@@ -111,7 +112,7 @@ namespace main {
             }
             else
             {
-                Shartilities.Log(Shartilities.LogType.ERROR, $"simulating on {cpu_type.ToString()} is unsupported for now\n", 1);
+                Shartilities.Log(Shartilities.LogType.ERROR, $"simulating on {cpu_type} is unsupported for now\n", 1);
             }
         }
     }
