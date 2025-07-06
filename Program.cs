@@ -105,14 +105,14 @@ namespace CAS
             if (cpu_type.Value == LibCPU.CPU_type.SingleCycle) {
                 StringBuilder sb = new();
                 (int cycles, List<int> regs, List<string> DM) = LibCPU.SingleCycle.Run(mcs, data_mem_init, IM_SIZE.Value, DM_SIZE.Value);
-                sb.Append(LibCPU.RISCV.get_regs(regs));
-                sb.Append(LibCPU.RISCV.get_DM(DM));
+                sb.Append(LibUtils.LibUtils.get_regs(regs));
+                sb.Append(LibUtils.LibUtils.get_DM(DM));
                 sb.Append($"Number of cycles consumed : {cycles,10}\n");
                 File.WriteAllText(output_filepath, sb.ToString());
             }
             else
             {
-                Shartilities.Log(Shartilities.LogType.ERROR, $"simulating on {cpu_type} is unsupported for now\n", 1);
+                Shartilities.Log(Shartilities.LogType.ERROR, $"simulating on {cpu_type} is unsupported\n", 1);
             }
         }
     }
