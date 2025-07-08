@@ -104,9 +104,9 @@ namespace CAS
 
             if (cpu_type.Value == LibCPU.CPU_type.SingleCycle) {
                 StringBuilder sb = new();
-                (int cycles, List<int> regs, List<string> DM) = LibCPU.SingleCycle.Run(mcs, data_mem_init, IM_SIZE.Value, DM_SIZE.Value);
-                sb.Append(LibUtils.LibUtils.get_regs(regs));
-                sb.Append(LibUtils.LibUtils.get_DM(DM));
+                (int cycles, List<string> regs, List<string> DM) = LibCPU.SingleCycle.Run(mcs, data_mem_init, IM_SIZE.Value, DM_SIZE.Value);
+                sb.Append(LibUtils.get_regs(regs));
+                sb.Append(LibUtils.get_DM(DM));
                 sb.Append($"Number of cycles consumed : {cycles,10}\n");
                 File.WriteAllText(output_filepath, sb.ToString());
             }
