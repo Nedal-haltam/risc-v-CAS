@@ -10,7 +10,7 @@ namespace CAS
             Console.WriteLine($"                        Available: singlecycle (default)");
             Console.WriteLine($"  -mc <file>            Path to input machine code file (required)");
             Console.WriteLine($"  -dm <file>            Path to input data memory file (optional)");
-            Console.WriteLine($"  -o <file>             Path to output file for register and data memory states (default: ./a.txt)");
+            Console.WriteLine($"  -o <file>             Path to output file for register and data memory states (values)");
             Console.WriteLine($"  --im-size <size>      Instruction memory total size in bytes (default: 1024)");
             Console.WriteLine($"  --dm-size <size>      Data memory total size in bytes (default: 1024)");
             Console.WriteLine();
@@ -22,7 +22,7 @@ namespace CAS
             LibCPU.CPU_type? cpu_type = LibCPU.CPU_type.SingleCycle;
             string? mc_filepath = null;
             string? dm_filepath = null;
-            string? output_filepath = "./a.txt";
+            string? output_filepath = null;
             uint? IM_SIZE = 1024;
             uint? DM_SIZE = 1024;
 
@@ -103,12 +103,7 @@ namespace CAS
                 data_mem_init = [.. File.ReadAllLines(dm_filepath)];
 
             if (cpu_type.Value == LibCPU.CPU_type.SingleCycle) {
-                StringBuilder sb = new();
-                (int cycles, List<string> regs, List<string> DM) = LibCPU.SingleCycle.Run(mcs, data_mem_init, IM_SIZE.Value, DM_SIZE.Value);
-                sb.Append(LibUtils.get_regs(regs));
-                sb.Append(LibUtils.get_DM(DM));
-                sb.Append($"Number of cycles consumed : {cycles,10}\n");
-                File.WriteAllText(output_filepath, sb.ToString());
+                LibCPU.SingleCycle.Run(mcs, data_mem_init, IM_SIZE.Value, DM_SIZE.Value, output_filepath);
             }
             else
             {
